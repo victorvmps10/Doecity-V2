@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// EDIT(FULL), REMOVE CHAT e FINANCES
+
+model Users{
+  id String @id @default(uuid()) 
+  username String
+  name String?
+  email String
+  password String
+  description String?
+  photo String?
+  isONG Boolean
+  balance Float @default(0)
+  created_at DateTime @default(now())
+  update_at DateTime @default(now())
+  @@map("users")
+
+  category Category? @relation(fields: [category_id], references: [id])
+
+  category_id String?
+  finances Finances[]
+  messages Message[]
+  posts Posts[]
+  likes Likes[]
+} 
+
+model Finances{
+  id String @id @default(uuid()) 
+  action Boolean
+  value Float
+  title String?
+  description String?
+  created_at DateTime @default(now())
+  update_at DateTime @default(now())
+  @@map("finances")
+
+  users Users @relation(fields: [user_id], references: [id])
+
+  user_id String
+} //Refazer tudo
+
+model Category{
+  id String @id @default(uuid())
+  name String
+  description String
+  image String?
+
+  @@map("categorys")
+
+  users Users[]
+
+} 
+
+model Message{
+  id String @id @default(uuid())
+  owner_name String
+  content String
+  created_at DateTime @default(now())
+  update_at DateTime @default(now())
+
+  @@map("messages")
+
+  users Users @relation(fields: [user_id], references: [id])
+  user_id String
+
+  posts Posts? @relation(fields: [post_id], references: [id])
+  post_id String?
+
+  private Private_Chat? @relation(fields: [chat_id], references: [id])
+  chat_id String?
+} //Sistema todo
+
+model Posts{
+  id String @id @default(uuid())
+  title String
+  description String?
+  photo String?
+  draft Boolean @default(true)
+  created_at DateTime @default(now())
+  update_at DateTime @default(now())
+  likesCount Int @default(0)
+
+  @@map("posts") 
+
+  users Users @relation(fields: [user_id], references: [id])
+ 
+  user_id String
+  messages Message[]
+  likes Likes[]
+} 
+
+model Likes {
+  id String @id @default(uuid())
+  date DateTime @default(now())
+
+  @@map("likes")
+  users Users @relation(fields: [user_id], references: [id])
+  post Posts @relation(fields: [post_id], references: [id])
+
+  post_id String
+  user_id String
+}
+
+model Private_Chat{
+  id String @id @default(uuid())
+  created_at DateTime @default(now())
+  update_at DateTime @default(now())
+  doador_id String
+  ong_id String
+
+  @@map("chats")
+  messages Message[]
+   
+} //Sistema Todo
