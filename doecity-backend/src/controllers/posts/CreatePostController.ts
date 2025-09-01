@@ -4,7 +4,7 @@ import { CreatePostService } from "../../services/posts/CreatePostService";
 class CreatePostController {
     async handle(req: Request, res: Response) {
         try {
-            const { title, description } = req.body;
+            const { title, description, draft } = req.body;
             const user_id = req.user_id;
             let photo = '';
             if (req.file) {
@@ -12,7 +12,7 @@ class CreatePostController {
             }
             const createService = new CreatePostService();
             const create = await createService.execute({
-                title, description, photo, user_id
+                title, description, photo, user_id, draft
             })
             return res.json(create);
         } catch (err) {

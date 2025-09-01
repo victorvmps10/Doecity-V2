@@ -5,16 +5,28 @@ interface CreateRequest {
     description: string;
     user_id: string;
     photo: string;
+    draft: boolean;
 }
 
 class CreatePostService {
-    async execute({ title, description, user_id, photo }: CreateRequest) {
+    async execute({ title, description, user_id, photo, draft }: CreateRequest) {
+        const userName = await prismaClient.users.findFirst({
+            where:{
+                id: user_id
+            },
+            select:{
+                name: true
+            }
+        });
+
         const create = await prismaClient.posts.create({
             data: {
                 title,
                 description,
                 photo,
-                user_id
+                user_id,
+                draft, 
+                userName: userName.name
             }
         });
         return create;

@@ -90,11 +90,12 @@ model Posts{
   title String
   description String?
   photo String?
-  draft Boolean @default(true)
+  draft Boolean
   created_at DateTime @default(now())
   update_at DateTime @default(now())
   likesCount Int @default(0)
-
+  userName String
+  
   @@map("posts") 
 
   users Users @relation(fields: [user_id], references: [id])

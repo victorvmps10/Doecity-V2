@@ -16,6 +16,9 @@ class ListPostService {
             const postsMany = await prismaClient.posts.findMany({
                 where:{
                     draft: false
+                },
+                orderBy:{
+                    created_at: "desc"
                 }
             });
             return postsMany;
