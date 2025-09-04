@@ -2,6 +2,7 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 
 import { api } from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
 
 type AuthContextData = {
     user: UserProps;
@@ -10,15 +11,19 @@ type AuthContextData = {
     loadingAuth: boolean;
     signIn: (Credentials: SignInProps) => Promise<void>;
     signUp: (Credentials: SignUpProps) => Promise<void>;
+    updateUser: (Credentials: UpdateUser) => Promise<void>;
     signOut: () => Promise<void>;
     theme: boolean;
     altTheme: () => Promise<void>;
+    setUserPhoto: () => Promise<void>;
 }
 
 type UserProps = {
     id: string;
+    name: string;
     username: string;
     email: string;
+    description: string;
     token: string;
     isONG: boolean;
 }
@@ -39,6 +44,12 @@ type SignUpProps = {
     ONG: boolean;
 }
 
+type UpdateUser = {
+    Name: string;
+    Email: string;
+    Username: string;
+    Description: string;
+}
 export const AuthContext = createContext({} as AuthContextData);
 export default function AuthProvider({ children }: AuthProviderProps) {
     useEffect(() => {
@@ -60,7 +71,9 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }, [])
     const [user, setUser] = useState<UserProps>({
         id: '',
+        name: '',
         username: '',
+        description: '',
         email: '',
         token: '',
         isONG: false
@@ -86,7 +99,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
             console.log(response.data)
 
-            const { id, username, token, isONG } = response.data;
+            const { id, name, username, description, token, isONG } = response.data;
+            console.log(response.data);
             const data = {
                 ...response.data
             }
@@ -95,8 +109,10 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setUser({
                 id,
+                name,
                 username,
                 email,
+                description,
                 token,
                 isONG
             });
@@ -127,7 +143,9 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             setUser({
                 id,
+                name,
                 username,
+                description: '',
                 email,
                 token,
                 isONG
@@ -141,15 +159,65 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     async function signOut() {
         setUser({
             id: '',
+            name: '',
             username: '',
+            description: '',
             email: '',
             token: '',
             isONG: false
         });
         await AsyncStorage.clear();
     }
+    async function updateUser({ Name, Username, Description, Email }: UpdateUser) {
+        try {
+            api.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+            const response = await api.put('/users/edit', {
+                name: Name,
+                username: Username,
+                email: Email,
+                description: Description,
+            });
+
+            console.log(response.data)
+
+            const { name, username, email, description } = response.data;
+            const data = {
+                ...response.data
+            }
+            await AsyncStorage.setItem('@doecity/user', JSON.stringify(data));
+
+            setUser({
+                id: user.id,
+                name,
+                username,
+                description,
+                email,
+                token: user.token,
+                isONG: user.isONG
+            });
+            setLoadingAuth(false);
+        } catch (err) {
+            console.log(err);
+            setLoadingAuth(false);
+        }
+    }
+    async function setUserPhoto() {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            quality: 1,
+            allowsMultipleSelection: false,
+        });
+
+        if (!result.canceled) {
+            console.log("Imagem escolhida:", result.assets[0].uri);
+        }
+    }
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, signIn, signUp, signOut, loadingAuth, theme, altTheme, loading }}>
+        <AuthContext.Provider value={{
+            isAuthenticated, user, signIn, signUp, signOut,
+            updateUser, loadingAuth, theme, altTheme, loading, setUserPhoto
+        }}>
             {children}
         </AuthContext.Provider>
     );

@@ -45,9 +45,8 @@ router.post('/users/create', upload.single('file'), new CreateUserController().h
 router.post('/users/auth', new AuthUserController().handle);
 router.put('/users/category', isAutenticated, new CategoryUserController().handle);
 router.get('/users/detail', isAutenticated, new DetailUserController().handle);
-router.put('/users/edit', upload.single('file'), isAutenticated, new EditUserController().handle);
+router.put('/users/edit', isAutenticated, new EditUserController().handle);
 router.delete('/users/delete', isAutenticated, new DeleteUserController().handle);
-
 // -- ROTAS DE CATEGORY
 
 router.post('/category/create', isAutenticated, upload.single('file'), new CreateCategoryController().handle);

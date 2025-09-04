@@ -9,10 +9,11 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 export default function Account() {
-  const { altTheme, signOut, theme } = useContext(AuthContext);
+  const { altTheme, signOut, theme, setUserPhoto } = useContext(AuthContext);
   const UserIco = '';
-
+  const navigation = useNavigation<any>();
   function handleSignOut() {
     Alert.alert(
       'Confirmar',
@@ -29,7 +30,9 @@ export default function Account() {
       ]
     )
   }
- 
+ async function handlePhoto(){
+  await setUserPhoto();
+ }
   return (
     <SafeAreaView style={[
       style.container,
@@ -39,7 +42,7 @@ export default function Account() {
       <Header title="Conta" />
       <TouchableOpacity
         style={style.imgButton}
-        onPress={() => null}>
+        onPress={handlePhoto}>
         {UserIco ?
           <Image
             //source={null}
@@ -57,7 +60,7 @@ export default function Account() {
           style={[style.button, {
             backgroundColor: theme ? '#f6b10a' : '#2f1b36'
           }]}
-          onPress={() => null}>
+          onPress={() => navigation.navigate('EditUser')}>
           <FontAwesome5
             name="user-edit"
             size={28}

@@ -9,19 +9,16 @@ class EditUserController {
                 username,
                 name,
                 email,
-                password,
                 description,
-                photo
             } = req.body;
             const editService = new EditUserService();
+            console.log(req.user_id);
             const edit = await editService.execute({
                 user_id: req.user_id,
                 username,
                 name,
                 email,
-                password,
                 description,
-                photo
             });
             return res.json(edit);
         } catch (err) {

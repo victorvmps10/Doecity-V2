@@ -14,6 +14,9 @@ import Account from "@pages/app/Account";
 import Feather from '@expo/vector-icons/Feather';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AppProvider from "@contexts/AppContext";
+import EditUser from "@pages/app/EditUser";
+import Search from "@pages/app/Search";
+import InfoONG from "@pages/app/InfoONG";
 
 
 export default function AppRoutes() {
@@ -45,15 +48,15 @@ export default function AppRoutes() {
                     }}
                 />
                 <Tabs.Screen
-                    name="Discover"
-                    component={Discover}
+                    name="StackDiscover"
+                    component={StackDiscover}
                     options={{
                         tabBarIcon: ({ size, color }) => <Feather name='search' size={size} color={color} />
                     }}
                 />
                 <Tabs.Screen
-                    name="Account"
-                    component={Account}
+                    name="StackAccount"
+                    component={StackAccount}
                     options={{
                         tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='account' size={size} color={color} />
                     }}
@@ -78,6 +81,51 @@ function StackHome() {
             <Stack.Screen
                 name="NewPost"
                 component={NewPost}
+            />
+        </Stack.Navigator>
+    )
+}
+
+
+function StackAccount() {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false
+            }}
+        >
+            <Stack.Screen
+                name="Account"
+                component={Account}
+            />
+            <Stack.Screen
+                name="EditUser"
+                component={EditUser}
+            />
+        </Stack.Navigator>
+    )
+}
+
+function StackDiscover() {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false
+            }}
+        >
+            <Stack.Screen
+                name="Discover"
+                component={Discover}
+            />
+            <Stack.Screen
+                name="InfoONG"
+                component={InfoONG}
+            />
+            <Stack.Screen
+                name="Search"
+                component={Search}
             />
         </Stack.Navigator>
     )

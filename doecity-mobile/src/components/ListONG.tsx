@@ -7,38 +7,25 @@ import { ptBR } from "date-fns/locale";
 import { useContext, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-interface ListPostProps {
-    title: string;
-    description: string;
+interface ListONGProps {
     username: string;
-    created_at: Date;
+    name: string;
 }
-export default function ListPost({ username, title, description, created_at }: ListPostProps) {
-
-    function formatTimePost() {
-        return formatDistance(
-            new Date(),
-            created_at,
-            {
-                locale: ptBR
-            }
-        )
-    }
-
+export default function ListONG({ username, name }: ListONGProps) {
+    const { theme } = useContext(AuthContext);
+    const navigation = useNavigation<any>();
     function handleNavigate() {
         navigation.navigate('StackDiscover', {
             screen: 'InfoONG',
-    });
+        });
     }
-    const { theme } = useContext(AuthContext);
-    const navigation = useNavigation<any>();
     return (
         <View style={style.container}>
-            <TouchableOpacity
-                style={style.rowHeader}
-                onPress={() => handleNavigate()}
+            <TouchableOpacity 
+            style={style.rowHeader}
+            onPress={handleNavigate}
             >
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                     <MaterialIcons
                         name="account-circle"
                         size={25}
@@ -47,16 +34,11 @@ export default function ListPost({ username, title, description, created_at }: L
                     <Text
                         style={style.name}
                     >{username}</Text>
+
                 </View>
 
-                <Text
-                    style={style.text}>Há {formatTimePost()}</Text>
-            </TouchableOpacity>
 
-            <Text
-                style={style.title}>{title}</Text>
-            <Text
-                style={style.text}>{description}</Text>
+            </TouchableOpacity>
 
         </View>
     );
@@ -69,7 +51,9 @@ const style = StyleSheet.create({
         margin: 10,
         backgroundColor: '#fff',
         borderWidth: 2,
-        borderColor: '#2f1b36'
+        borderColor: '#2f1b36',
+        width: 350,
+        height: 50
     },
     name: {
         fontWeight: 'bold',
@@ -88,6 +72,6 @@ const style = StyleSheet.create({
     rowHeader: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     }
 })

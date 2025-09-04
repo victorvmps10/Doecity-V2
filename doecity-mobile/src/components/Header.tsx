@@ -10,7 +10,7 @@ interface HeaderProps {
     iconBef?: React.ComponentProps<typeof Ionicons>['name'];
     pressBef?: () => Promise<void>;
     iconAft?: React.ComponentProps<typeof Feather>['name'];
-    pressAft?: () => Promise<void>;
+    pressAft?: () => void;
 }
 export default function Header({ title, iconBef, pressBef, iconAft, pressAft }: HeaderProps) {
     const {theme} = useContext(AuthContext);

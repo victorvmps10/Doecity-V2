@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import { AuthContext } from '@contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
@@ -20,7 +21,8 @@ export default function Home() {
     }
     handleListPost();
     console.log(data)
-  }, [])
+  }, []);
+  
   return (
     <SafeAreaView
       style={[

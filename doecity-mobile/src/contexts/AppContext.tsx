@@ -8,8 +8,10 @@ import { useNavigation } from '@react-navigation/native';
 type AppContextData = {
     createPost: (Credentials: CreatePostProps) => Promise<void>;
     listPost: () => Promise<void>;
+    listUser: (Credentials: ListProps) => Promise<void>;
     loading: boolean;
     data: Post[];
+    ongs: Ong[];
 }
 
 interface Post {
@@ -23,6 +25,11 @@ interface Post {
     update_at: Date;
 }
 
+interface Ong{
+    username: string;
+    name: string;
+    photo: string;
+}
 type AppProviderProps = {
     children: ReactNode;
 }
@@ -32,6 +39,9 @@ type CreatePostProps = {
     description: string;
 }
 
+type ListProps = {
+    Username: string;
+}
 export const AppContext = createContext({} as AppContextData);
 
 export default function AppProvider({ children }: AppProviderProps) {
@@ -41,6 +51,7 @@ export default function AppProvider({ children }: AppProviderProps) {
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
+    const [ongs, setONGS] = useState([]);
     async function createPost({ title, description }: CreatePostProps) {
         setLoading(true);
         try {
@@ -64,9 +75,9 @@ export default function AppProvider({ children }: AppProviderProps) {
 
             );
             const sorted = response.data.sort(
-                (a:Post, b:Post) =>
-                    new Date(b.created_at).getTime() - 
-                new Date(a.created_at).getTime()
+                (a: Post, b: Post) =>
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime()
             );
             setData(sorted);
             setLoading(false);
@@ -75,8 +86,19 @@ export default function AppProvider({ children }: AppProviderProps) {
             setLoading(false);
         }
     }
+    async function listUser({ Username }: ListProps) {
+        const response = await api.get('/users/detail',
+            {
+                params: {
+                    Search: 'true',
+                    username: Username
+                }
+            }
+        );
+        setONGS(response.data);
+    }
     return (
-        <AppContext.Provider value={{ createPost, listPost, data, loading }}>
+        <AppContext.Provider value={{ createPost, listPost, listUser, data, loading, ongs }}>
             {children}
         </AppContext.Provider>
     );
