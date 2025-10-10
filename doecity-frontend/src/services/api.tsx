@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: 'http://192.168.15.114:3333'
+    baseURL: 'https://doecity-backend.onrender.com'
 });
 
 export { api };
