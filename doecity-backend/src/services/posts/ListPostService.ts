@@ -12,12 +12,12 @@ class ListPostService {
                 draft: false
             }
         });
-        if (!posts) {
+        if (!user_id) {
             const postsMany = await prismaClient.posts.findMany({
-                where:{
+                where: {
                     draft: false
                 },
-                orderBy:{
+                orderBy: {
                     created_at: "desc"
                 }
             });

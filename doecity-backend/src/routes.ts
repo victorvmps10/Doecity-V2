@@ -32,6 +32,8 @@ import { ListChatController } from "./controllers/chats/ListChatController";
 import { CreateMessageController } from "./controllers/messages/CreateMessageController";
 import { DeleteMessageController } from "./controllers/messages/DeleteMessageController";
 import { ListMessageController } from "./controllers/messages/ListMessageController";
+import { SetUserPhotoController } from "./controllers/users/SetUserPhotoController";
+import { DiscoverUserController } from "./controllers/users/DiscoverUserController";
 
 
 
@@ -46,6 +48,8 @@ router.post('/users/auth', new AuthUserController().handle);
 router.put('/users/category', isAutenticated, new CategoryUserController().handle);
 router.get('/users/detail', isAutenticated, new DetailUserController().handle);
 router.put('/users/edit', isAutenticated, new EditUserController().handle);
+router.put('/users/upload', isAutenticated, upload.single('file'), new SetUserPhotoController().handle);
+router.get('/users/discover', new DiscoverUserController().handle);
 router.delete('/users/delete', isAutenticated, new DeleteUserController().handle);
 // -- ROTAS DE CATEGORY
 

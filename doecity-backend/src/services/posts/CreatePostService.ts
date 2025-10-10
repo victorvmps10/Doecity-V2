@@ -5,28 +5,31 @@ interface CreateRequest {
     description: string;
     user_id: string;
     photo: string;
-    draft: boolean;
 }
 
 class CreatePostService {
-    async execute({ title, description, user_id, photo, draft }: CreateRequest) {
-        const userName = await prismaClient.users.findFirst({
+    async execute({ title, description, user_id, photo }: CreateRequest) {
+        const userAlreadyExists = await prismaClient.users.findFirst({
             where:{
                 id: user_id
             },
             select:{
-                name: true
+                username: true,
+                photo: true
             }
         });
-
+        if(!userAlreadyExists){
+            throw new Error("User Não Existe")
+        }
         const create = await prismaClient.posts.create({
             data: {
                 title,
                 description,
                 photo,
                 user_id,
-                draft, 
-                userName: userName.name
+                draft: false, 
+                userName: userAlreadyExists.username,
+                photo_user: userAlreadyExists.photo
             }
         });
         return create;

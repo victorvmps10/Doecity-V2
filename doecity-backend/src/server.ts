@@ -12,7 +12,7 @@ app.use(cors());
 app.use(router);
 
 app.use(
-    '/files',
+    '/upload',
     express.static(path.resolve(__dirname, '..', 'images'))
 );
 
@@ -27,9 +27,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
         message: 'Internal server error.'
     })
 });
-
-app.use('/files',
-    express.static(path.resolve(__dirname, '..', 'images'))
-);
 
 app.listen(3333, () => { console.log("Server DoeCity Ativado!!!") });

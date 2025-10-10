@@ -16,115 +16,122 @@ datasource db {
 
 // EDIT(FULL), REMOVE CHAT e FINANCES
 
-model Users{
-  id String @id @default(uuid()) 
-  username String
-  name String?
-  email String
-  password String
+model Users {
+  id          String   @id @default(uuid())
+  username    String
+  name        String?
+  email       String
+  password    String
   description String?
-  photo String?
-  isONG Boolean
-  balance Float @default(0)
-  created_at DateTime @default(now())
-  update_at DateTime @default(now())
-  @@map("users")
+  photo       String?
+  isONG       Boolean
+  balance     Float    @default(0)
+  created_at  DateTime @default(now())
+  update_at   DateTime @default(now())
 
   category Category? @relation(fields: [category_id], references: [id])
 
   category_id String?
-  finances Finances[]
-  messages Message[]
-  posts Posts[]
-  likes Likes[]
-} 
+  finances    Finances[]
+  messages    Message[]
+  posts       Posts[]    @relation("UserPosts")
+  likes       Likes[]
 
-model Finances{
-  id String @id @default(uuid()) 
-  action Boolean
-  value Float
-  title String?
+  @@map("users")
+}
+
+model Finances {
+  id          String   @id @default(uuid())
+  action      Boolean
+  value       Float
+  title       String?
   description String?
-  created_at DateTime @default(now())
-  update_at DateTime @default(now())
-  @@map("finances")
+  created_at  DateTime @default(now())
+  update_at   DateTime @default(now())
 
   users Users @relation(fields: [user_id], references: [id])
 
   user_id String
-} //Refazer tudo
 
-model Category{
-  id String @id @default(uuid())
-  name String
+  @@map("finances")
+}
+
+//Refazer tudo
+
+model Category {
+  id          String  @id @default(uuid())
+  name        String
   description String
-  image String?
-
-  @@map("categorys")
+  image       String?
 
   users Users[]
 
-} 
+  @@map("categorys")
+}
 
-model Message{
-  id String @id @default(uuid())
+model Message {
+  id         String   @id @default(uuid())
   owner_name String
-  content String
+  content    String
   created_at DateTime @default(now())
-  update_at DateTime @default(now())
+  update_at  DateTime @default(now())
 
-  @@map("messages")
-
-  users Users @relation(fields: [user_id], references: [id])
+  users   Users  @relation(fields: [user_id], references: [id])
   user_id String
 
-  posts Posts? @relation(fields: [post_id], references: [id])
+  posts   Posts?  @relation(fields: [post_id], references: [id])
   post_id String?
 
   private Private_Chat? @relation(fields: [chat_id], references: [id])
   chat_id String?
-} //Sistema todo
 
-model Posts{
-  id String @id @default(uuid())
-  title String
+  @@map("messages")
+}
+
+//Sistema todo
+
+model Posts {
+  id          String   @id @default(uuid())
+  title       String
   description String?
-  photo String?
-  draft Boolean
-  created_at DateTime @default(now())
-  update_at DateTime @default(now())
-  likesCount Int @default(0)
-  userName String
-  
-  @@map("posts") 
+  photo       String?
+  draft       Boolean
+  created_at  DateTime @default(now())
+  update_at   DateTime @default(now())
+  likesCount  Int      @default(0)
+  userName    String
 
-  users Users @relation(fields: [user_id], references: [id])
- 
-  user_id String
-  messages Message[]
-  likes Likes[]
-} 
+  users Users @relation("UserPosts", fields: [user_id], references: [id])
+
+  photo_user String?
+  user_id    String
+  messages   Message[]
+  likes      Likes[]
+
+  @@map("posts")
+}
 
 model Likes {
-  id String @id @default(uuid())
-  date DateTime @default(now())
-
-  @@map("likes")
-  users Users @relation(fields: [user_id], references: [id])
-  post Posts @relation(fields: [post_id], references: [id])
+  id    String   @id @default(uuid())
+  date  DateTime @default(now())
+  users Users    @relation(fields: [user_id], references: [id])
+  post  Posts    @relation(fields: [post_id], references: [id])
 
   post_id String
   user_id String
+
+  @@map("likes")
 }
 
-model Private_Chat{
-  id String @id @default(uuid())
-  created_at DateTime @default(now())
-  update_at DateTime @default(now())
-  doador_id String
-  ong_id String
+model Private_Chat {
+  id         String    @id @default(uuid())
+  created_at DateTime  @default(now())
+  update_at  DateTime  @default(now())
+  doador_id  String
+  ong_id     String
+  messages   Message[]
 
   @@map("chats")
-  messages Message[]
-   
-} //Sistema Todo
+}
+
+//Sistema Todo

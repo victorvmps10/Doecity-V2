@@ -10,13 +10,14 @@ class DetailUserService {
         if (isSearch) {
             const search = await prismaClient.users.findMany({
                 where: {
-                    username:{
+                    username: {
                         startsWith: username,
                         mode: 'insensitive'
                     },
                     isONG: true
                 },
                 select: {
+                    id: true,
                     name: true,
                     username: true,
                     photo: true
@@ -29,9 +30,14 @@ class DetailUserService {
                 id: user_id
             },
             select: {
+                id: true,
                 name: true,
                 username: true,
                 email: true,
+                description: true,
+                created_at: true,
+                update_at: true,
+                photo: true
             }
         })
 

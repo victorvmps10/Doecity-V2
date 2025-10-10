@@ -37,7 +37,15 @@ class EditUserService{
                 update_at: new Date()
             }
         });
-        return updateUser;
+        const updateUserInPost = await prismaClient.posts.updateMany({
+            where:{
+                user_id
+            },
+            data:{
+                userName: updateUser.username
+            }
+        })
+        return {message: 'User Editado'};
     }
 }
 
