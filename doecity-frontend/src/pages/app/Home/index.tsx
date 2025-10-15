@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, ScrollView, Dimensions } from 'react-native';
+import { FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, ScrollView, Dimensions, Linking } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 import { AuthContext } from '@contexts/AuthContext';
@@ -9,6 +9,7 @@ import Header from '@components/Header';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { AppContext } from '@contexts/AppContext';
 import ListPost from '@components/ListPost';
+import { AntDesign } from '@expo/vector-icons';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -31,6 +32,17 @@ export default function Home() {
           :
           { backgroundColor: '#fff' }]}>
       <Header title="Posts Recentes: " />
+      {
+        user.isONG ?
+          <TouchableOpacity style={style.newButton} onPress={() => navigation.navigate('NewPost')}>
+            <FontAwesome6
+              name="add"
+              size={24}
+              color="#fff" />
+            <Text style={{ color: '#fff' }}> Novo Post </Text>
+          </TouchableOpacity>
+          : null
+      }
       {Platform.OS === 'web' ? (
         <ScrollView
           style={style.scrollWeb}
@@ -50,6 +62,7 @@ export default function Home() {
               photo_user={item.photo_user}
             />
           ))}
+
         </ScrollView>
       ) : (
         <FlatList
@@ -71,38 +84,22 @@ export default function Home() {
           }
         />
       )}
-
-      {user.isONG ?
-        <TouchableOpacity
-          style={style.addButton}
-          onPress={() => navigation.navigate('NewPost')}
-        >
-          <FontAwesome6
-            name="add"
-            size={24}
-            color="black" />
-        </TouchableOpacity>
-        : null}
-
-
     </SafeAreaView>
   );
 }
 
 const style = StyleSheet.create({
+  newButton: {
+    margin: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: '#f6b10a',
+    borderRadius: 10,
+    height: 40,
+    flexDirection: 'row'
+  },
   container: {
     flex: 1,
-  },
-  addButton: {
-    position: 'absolute',
-    bottom: 25,
-    right: 25,
-    backgroundColor: '#f6b10a',
-    borderRadius: 25,
-    width: 50,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   scrollWeb: {
     height: Platform.OS === 'web' ? windowHeight : undefined, // número

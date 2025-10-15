@@ -3,6 +3,8 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import { Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 type AuthContextData = {
     user: UserProps;
@@ -90,6 +92,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const [theme, setTheme] = useState(false);
     const [photo, setPhoto] = useState("");
     const isAuthenticated = !!user.token;
+
+    const navigation = useNavigation<any>();
 
     async function altTheme() {
         const newTheme = !theme;
@@ -219,60 +223,94 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         }
     }
     async function setUserPhoto() {
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images'],
-            quality: 1,
-            allowsMultipleSelection: false,
-        });
+        if (Platform.OS === "web") {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
 
-        if (!result.canceled) {
-            console.log("Imagem escolhida:", result.assets[0].uri);
-            const newPhoto = result.assets[0].uri;
-            setPhoto(result.assets[0].uri);
+            input.onchange = async (event: any) => {
+                const file = event.target.files[0];
+                if (!file) return;
 
+                const formData = new FormData();
+                formData.append("typeImage", "user");
+                formData.append("user_id", user.id);
+                formData.append("file", file);
 
-            if (!photo) return;
+                try {
+                    const response = await api.put("/users/upload", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            Authorization: `Bearer ${user.token}`,
+                        },
+                    });
 
-            const formData = new FormData();
+                    const newUserData = {
+                        ...user,
+                        photo: `${api.defaults.baseURL}/upload/${response.data.photo}?t=${Date.now()}`,
+                    };
 
-            formData.append("typeImage", "user");
-
-            formData.append("file", {
-                uri: newPhoto,
-                type: "image/jpeg",
-                name: "upload.jpg",
-            } as any);
-
-            try {
-                api.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
-                const response = await api.put("/users/upload", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-
-                });
-                let newUserData = {
-                    id: user.id,
-                    name: user.name,
-                    username: user.username,
-                    description: user.description,
-                    email: user.email,
-                    photo: `${api.defaults.baseURL}/upload/${response.data.photo}`,
-                    token: user.token,
-                    isONG: user.isONG
+                    setUser(newUserData);
+                    setPhoto(newUserData.photo);
+                    await AsyncStorage.setItem("@doecity/user", JSON.stringify(newUserData));
+                    console.log("Upload sucesso:", response.data);
+                } catch (error) {
+                    console.error("Erro upload (web):", error);
                 }
-                setUser(newUserData);
-                const data = {
-                    ...newUserData
+            };
+
+            input.click();
+        } else {
+            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!permissionResult.granted) {
+                console.log("Permissão negada!");
+                return;
+            }
+
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 1,
+                allowsMultipleSelection: false,
+            });
+
+            if (!result.canceled) {
+                const newPhoto = result.assets[0].uri;
+                console.log("Imagem escolhida:", newPhoto);
+                setPhoto(newPhoto);
+
+                const formData = new FormData();
+                formData.append("typeImage", "user");
+                formData.append("user_id", user.id);
+                formData.append("file", {
+                    uri: newPhoto,
+                    type: "image/jpeg",
+                    name: "upload.jpg",
+                } as any);
+
+                try {
+                    const response = await api.put("/users/upload", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            Authorization: `Bearer ${user.token}`,
+                        },
+                    });
+
+                    const newUserData = {
+                        ...user,
+                        photo: `${api.defaults.baseURL}/upload/${response.data.photo}`,
+                    };
+
+                    setUser(newUserData);
+                    setPhoto(newUserData.photo); 
+                    await AsyncStorage.setItem("@doecity/user", JSON.stringify(newUserData));
+                    console.log("Upload sucesso:", response.data);
+                } catch (error) {
+                    console.error("Erro upload:", error);
                 }
-                await AsyncStorage.setItem('@doecity/user', JSON.stringify(data));
-                console.log("Upload sucesso:", response.data);
-            } catch (error) {
-                console.error("Erro upload:", error);
             }
         }
     }
+
     return (
         <AuthContext.Provider value={{
             isAuthenticated, user, signIn, signUp, signOut,

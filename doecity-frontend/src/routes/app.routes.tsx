@@ -3,7 +3,7 @@ import { AuthContext } from "@contexts/AuthContext";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Platform, SafeAreaView, View } from "react-native";
+import { Linking, Platform, SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Home from "@pages/app/Home";
@@ -23,6 +23,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import PostONG from "@pages/app/PostONG";
 import FinanceONG from "@pages/app/FinanceONG";
 import Info from "@pages/app/Info";
+import { AntDesign } from "@expo/vector-icons";
+import Finance from "@pages/app/Finance";
 
 
 export default function AppRoutes() {
@@ -31,79 +33,90 @@ export default function AppRoutes() {
     const Tabs = createBottomTabNavigator();
     const StackWeb = createStackNavigator();
     return (
-        <AppProvider>
-            {Platform.OS == 'web' ? 
-             <StackWeb.Navigator
-                screenOptions={{
-                    headerShown: false,
-                }}
+        <View style={{ flex: 1 }}>
+            <AppProvider>
+                {Platform.OS == 'web' ?
+                    <StackWeb.Navigator
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    >
+                        <StackWeb.Screen
+                            name="StackHome"
+                            component={StackHome}
+                        />
+                        <StackWeb.Screen
+                            name="StackDiscover"
+                            component={StackDiscover}
+
+                        />
+                        <StackWeb.Screen
+                            name="StackAccount"
+                            component={StackAccount}
+                        />
+                        <StackWeb.Screen
+                            name="Info"
+                            component={Info}
+                        />
+                    </StackWeb.Navigator>
+                    :
+                    <Tabs.Navigator
+                        screenOptions={{
+                            tabBarActiveBackgroundColor: theme ? '#291630ff' : 'rgba(255, 255, 248, 1)',
+                            tabBarInactiveBackgroundColor: theme ? '#291630ff' : 'rgba(255, 255, 248, 1)',
+                            tabBarActiveTintColor: '#f6b10a',
+                            tabBarInactiveTintColor: theme ? '#fff' : '#291630ff',
+                            headerShown: false,
+                            tabBarShowLabel: false,
+                            tabBarStyle: {
+                                borderTopWidth: 0,
+                                elevation: 0,
+                                shadowOpacity: 0,
+                            },
+                        }}
+                    >
+                        <Tabs.Screen
+                            name="StackHome"
+                            component={StackHome}
+                            options={{
+                                tabBarIcon: ({ size, color }) => <Feather name='home' size={size} color={color} />
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="StackDiscover"
+                            component={StackDiscover}
+                            options={{
+                                tabBarIcon: ({ size, color }) => <Feather name='search' size={size} color={color} />
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="StackAccount"
+                            component={StackAccount}
+                            options={{
+                                tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='account' size={size} color={color} />
+                            }}
+                        />
+                        <Tabs.Screen
+                            name="Info"
+                            component={Info}
+                            options={{
+                                tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='information' size={size} color={color} />
+                            }}
+                        />
+                    </Tabs.Navigator>
+                }
+
+            </AppProvider>
+            <TouchableOpacity
+                style={style.support}
+                onPress={() => Linking.openURL('https://mail.google.com/mail/?view=cm&fs=1&to=suportdoecity@gmail.com&su=Ajuda&body=Olá, preciso de suporte!')}
             >
-                <StackWeb.Screen
-                    name="StackHome"
-                    component={StackHome}
-                />
-                <StackWeb.Screen
-                    name="StackDiscover"
-                    component={StackDiscover}
-                    
-                />
-                <StackWeb.Screen
-                    name="StackAccount"
-                    component={StackAccount}
-                />
-                 <StackWeb.Screen
-                    name="Info"
-                    component={Info}
-                />
-            </StackWeb.Navigator>
-            :
-             <Tabs.Navigator
-                screenOptions={{
-                    tabBarActiveBackgroundColor: theme ? '#291630ff' : 'rgba(255, 255, 248, 1)',
-                    tabBarInactiveBackgroundColor: theme ? '#291630ff' : 'rgba(255, 255, 248, 1)',
-                    tabBarActiveTintColor: '#f6b10a',
-                    tabBarInactiveTintColor: theme ? '#fff' : '#291630ff',
-                    headerShown: false,
-                    tabBarShowLabel: false,
-                    tabBarStyle: {
-                        borderTopWidth: 0,
-                        elevation: 0,
-                        shadowOpacity: 0,
-                    },
-                }}
-            >
-                <Tabs.Screen
-                    name="StackHome"
-                    component={StackHome}
-                    options={{
-                        tabBarIcon: ({ size, color }) => <Feather name='home' size={size} color={color} />
-                    }}
-                />
-                <Tabs.Screen
-                    name="StackDiscover"
-                    component={StackDiscover}
-                    options={{
-                        tabBarIcon: ({ size, color }) => <Feather name='search' size={size} color={color} />
-                    }}
-                />
-                <Tabs.Screen
-                    name="StackAccount"
-                    component={StackAccount}
-                    options={{
-                        tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='account' size={size} color={color} />
-                    }}
-                />
-                <Tabs.Screen
-                    name="Info"
-                    component={Info}
-                    options={{
-                        tabBarIcon: ({ size, color }) => <MaterialCommunityIcons name='information' size={size} color={color} />
-                    }}
-                />
-            </Tabs.Navigator>
-            }
-           
-        </AppProvider>
+                <AntDesign
+                    name="customerservice"
+                    size={32}
+                    color="#fff" />
+            </TouchableOpacity>
+        </View>
     );
 }
 
@@ -144,6 +157,10 @@ function StackAccount() {
                 name="EditUser"
                 component={EditUser}
             />
+             <Stack.Screen
+                name="Finance"
+                component={Finance}
+            />
         </Stack.Navigator>
     )
 }
@@ -172,8 +189,9 @@ function StackDiscover() {
     )
 }
 
+const TopBar = createMaterialTopTabNavigator();
+
 function TopBarONG() {
-    const TopBar = createMaterialTopTabNavigator();
     const navigation = useNavigation<any>();
     const { theme } = useContext(AuthContext);
     const route = useRoute();
@@ -237,3 +255,18 @@ function TopBarONG() {
 
     )
 }
+
+const style = StyleSheet.create({
+    support: {
+        position: Platform.OS === 'web' ? ('fixed' as any) : 'absolute',
+        bottom: Platform.OS == 'web' ? 25 : 100,
+        right: 25,
+        backgroundColor: '#f6b10a',
+        borderRadius: 25,
+        width: 50,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+})

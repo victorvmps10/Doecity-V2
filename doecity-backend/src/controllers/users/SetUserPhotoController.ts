@@ -6,6 +6,7 @@ import { SetUserPhotoService } from "../../services/users/SetUserPhotoService";
 class SetUserPhotoController {
     async handle(req: Request, res: Response) {
         try {
+            const {user_id} = req.body;
             let photo = '';
             if (req.file) {
                 photo = req.file.filename;
@@ -16,7 +17,7 @@ class SetUserPhotoController {
                 return res.status(400).json({ error: "Dados incompletos" });
             }
             const UserPhotoService = await userPhotoService.execute({
-                user_id: req.user_id,
+                user_id: user_id,
                 photo
             });
             return res.json(UserPhotoService);

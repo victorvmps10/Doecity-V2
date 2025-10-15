@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "doecity-frontend",
-    "slug": "doecity-frontend",
+    "name": "DoeCity",
+    "slug": "DoeCity",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,13 +17,30 @@
     },
     "android": {
       "adaptiveIcon": {
+        "package": "com.v10.doecityv2",
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.victorvmps10.DoeCity"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "27ada44f-107c-4b41-9a1f-33e153b3c91c"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enablePngCrunchInReleaseBuilds": false
+          }
+        }
+      ]
+    ]
   }
 }

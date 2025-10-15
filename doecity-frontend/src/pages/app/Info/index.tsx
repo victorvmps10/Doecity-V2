@@ -1,10 +1,10 @@
 import Header from '@components/Header';
 import { Image, Platform, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useContext } from 'react';
-import Victor from '@assets/Victor.png';
-import Juan from '@assets/Juan.png';
-import Pan from '@assets/Pan.png';
-import Iuri from '@assets/Iuri.png';
+import Victor from '@assets/victor.jpg';
+import Juan from '@assets/juan.jpg';
+import Pan from '@assets/pan.jpg';
+import Iuri from '@assets/iuri.jpg';
 import { AuthContext } from '@contexts/AuthContext';
 export default function Info() {
   const { theme } = useContext(AuthContext);
@@ -27,11 +27,17 @@ export default function Info() {
             <Text style={style.name}>
               Victor Valentim
             </Text>
+            <Text style={style.func}>
+              Desenvolvedor
+            </Text>
           </View>
           <View style={{ margin: 10, alignItems: 'center' }}>
             <Image source={Pan} style={style.img} />
             <Text style={style.name}>
               Arthur Pan
+            </Text>
+            <Text style={style.func}>
+              Designer
             </Text>
           </View>
           <View style={{ margin: 10, alignItems: 'center' }}>
@@ -39,11 +45,17 @@ export default function Info() {
             <Text style={style.name}>
               Juan Luiz
             </Text>
+            <Text style={style.func}>
+              Designer
+            </Text>
           </View>
           <View style={{ margin: 10, alignItems: 'center' }}>
             <Image source={Iuri} style={style.img} />
             <Text style={style.name}>
               Iuri Chagas
+            </Text>
+            <Text style={style.func}>
+              Designer
             </Text>
           </View>
         </ScrollView>
@@ -58,11 +70,17 @@ export default function Info() {
               <Text style={style.name}>
                 Victor Val.
               </Text>
+              <Text style={style.func}>
+                Desenvolvedor
+              </Text>
             </View>
             <View style={{ margin: 10, alignItems: 'center' }}>
               <Image source={Pan} style={style.imgMobile} />
               <Text style={style.name}>
                 Arthur Pan
+              </Text>
+              <Text style={style.func}>
+                Designer
               </Text>
             </View>
           </View>
@@ -74,11 +92,17 @@ export default function Info() {
               <Text style={style.name}>
                 Juan Luiz
               </Text>
+              <Text style={style.func}>
+                Designer
+              </Text>
             </View>
             <View style={{ margin: 10, alignItems: 'center' }}>
               <Image source={Iuri} style={style.imgMobile} />
               <Text style={style.name}>
                 Iuri Chagas
+              </Text>
+              <Text style={style.func}>
+                Designer
               </Text>
             </View>
           </View>
@@ -99,6 +123,11 @@ const style = StyleSheet.create({
   },
   name: {
     fontSize: 25,
+    margin: 5,
+    color: '#f6b10a'
+  },
+  func:{
+    fontSize: 15,
     margin: 5,
     color: '#f6b10a'
   },

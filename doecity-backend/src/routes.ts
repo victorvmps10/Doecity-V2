@@ -35,6 +35,11 @@ import { ListMessageController } from "./controllers/messages/ListMessageControl
 import { SetUserPhotoController } from "./controllers/users/SetUserPhotoController";
 import { DiscoverUserController } from "./controllers/users/DiscoverUserController";
 
+import { ListActionController } from "./controllers/finances/ListActionController";
+import { DonateController } from "./controllers/finances/DonateController";
+import { DepositController } from "./controllers/finances/DepositController";
+import { SakeController } from "./controllers/finances/SakeController";
+
 
 
 const router = Router();
@@ -51,6 +56,7 @@ router.put('/users/edit', isAutenticated, new EditUserController().handle);
 router.put('/users/upload', isAutenticated, upload.single('file'), new SetUserPhotoController().handle);
 router.get('/users/discover', new DiscoverUserController().handle);
 router.delete('/users/delete', isAutenticated, new DeleteUserController().handle);
+
 // -- ROTAS DE CATEGORY
 
 router.post('/category/create', isAutenticated, upload.single('file'), new CreateCategoryController().handle);
@@ -58,6 +64,11 @@ router.delete('/category/delete', new DeleteCategoryController().handle);
 router.get('/category/list', new ListCategoryController().handle);
 
 // -- ROTAS DE FINANCES
+
+router.get('/finances/list', isAutenticated, new ListActionController().handle);
+router.post('/finances/donate', isAutenticated, new DonateController().handle);
+router.put('/finances/deposit', isAutenticated, new DepositController().handle);
+router.put('/finances/sake', isAutenticated, new SakeController().handle);
 
 // -- ROTAS DE POSTS
 

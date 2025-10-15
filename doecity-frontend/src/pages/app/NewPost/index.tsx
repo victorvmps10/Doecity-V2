@@ -1,7 +1,7 @@
 import Header from '@components/Header';
 import { AuthContext } from '@contexts/AuthContext';
-import { useContext, useState } from 'react';
-import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useContext, useEffect, useState } from 'react';
+import { ActivityIndicator, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View, Platform } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -9,16 +9,33 @@ import { AppContext } from '@contexts/AppContext';
 
 export default function NewPost() {
 
-    const { theme, loading } = useContext(AuthContext);
+    const { theme } = useContext(AuthContext);
     const { createPost, setPostPhoto, photo } = useContext(AppContext);
     const navigation = useNavigation<any>();
-
+    const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [imageSource, setImageSource] = useState<{ uri: string } | null>(null);
+    useEffect(() => {
+        if (!photo) return;
+
+        if (Platform.OS === 'web' && photo instanceof File) {
+            setImageSource({ uri: URL.createObjectURL(photo) });
+        } else if (typeof photo === 'string') {
+            setImageSource({ uri: photo });
+        }
+    }, [photo]);
     async function handleCreate() {
         if (title !== "" || description !== "") {
-            await createPost({ title, description, photo: '' })
+            setLoading(true);
+            await createPost({ title, description, photo: '' }).then(()=>{
+                setLoading(false);
+            })
         }
+
+    }
+    async function handleSetPostPhoto() {
+        await setPostPhoto();
 
     }
     return (
@@ -37,12 +54,12 @@ export default function NewPost() {
 
             <View style={{ alignItems: 'center' }}>
                 <TouchableOpacity
-                onPress={setPostPhoto}
+                    onPress={handleSetPostPhoto}
                 >
-                    {photo ?
+                    {imageSource ?
                         <Image
-                        source={{uri: photo}}
-                        style={{borderRadius: 40, width: 150, height: 150}} 
+                            source={imageSource}
+                            style={{ borderRadius: 40, width: 150, height: 150 }}
                         />
                         :
                         <MaterialIcons
@@ -71,7 +88,7 @@ export default function NewPost() {
                     onPress={() => handleCreate()}
                 >
                     {loading ?
-                        <ActivityIndicator color='#f6b10a' size={25} />
+                        <ActivityIndicator color={theme ? '#2f1b36' : '#fff'} size={25} />
                         :
                         <Text style={{ color: theme ? '#2f1b36' : '#fff' }}>Criar Post</Text>}
 

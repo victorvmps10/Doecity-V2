@@ -24,10 +24,10 @@ export default function Sign() {
   function signAlt() {
     setSignType(!signType);
     if (signType) {
-      setAltTextButton("Não tem conta? Cadastre-se");
+      setAltTextButton("Tem conta? Entre");
       setLoginTextButton("Cadastrar");
     } else {
-      setAltTextButton("Tem conta? Entre");
+      setAltTextButton("Não tem conta? Cadastre-se");
       setLoginTextButton("Entrar");
     }
   }
@@ -58,6 +58,7 @@ export default function Sign() {
           style={style.input}
           placeholder='Username:'
           value={name}
+          placeholderTextColor='#cbcbcb'
           onChangeText={(text) => setName(text)}
           maxLength={18} />
         : null
@@ -65,6 +66,7 @@ export default function Sign() {
       <TextInput style={style.input}
         placeholder='Email:'
         value={email}
+        placeholderTextColor='#cbcbcb'
         onChangeText={(text) => setEmail(text)}
         maxLength={75} />
       <View style={style.passwordView}>
@@ -72,14 +74,15 @@ export default function Sign() {
           style={style.inputPassword}
           placeholder='Senha:'
           value={password}
+          placeholderTextColor='#cbcbcb'
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={hiddenPassword}
           maxLength={75}
         />
         <TouchableOpacity
-        onPress={()=>setHiddenPassword(!hiddenPassword)}>
+          onPress={() => setHiddenPassword(!hiddenPassword)}>
           <Ionicons
-            name= {hiddenPassword ? "eye-off" : "eye"}
+            name={hiddenPassword ? "eye-off" : "eye"}
             color='#f6b10a'
             size={25}
           />
@@ -103,9 +106,9 @@ export default function Sign() {
         onPress={() => handleLogin()}
       >
         {loadingAuth ?
-          <ActivityIndicator color='#f6b10a' size={25} />
+          <ActivityIndicator color='#fff' size={25} />
           :
-          <Text style={{ color: theme ? '#2f1b36' : '#f6b10a' }}>{loginTextButton}</Text>}
+          <Text style={{ color: '#2f1b36' }}>{loginTextButton}</Text>}
 
       </TouchableOpacity>
       <TouchableOpacity onPress={() => signAlt()}>
@@ -141,6 +144,7 @@ const style = StyleSheet.create({
     margin: 10,
     height: 40,
     borderColor: '#000',
+    color: '#000',
     borderWidth: 1,
     paddingHorizontal: 10
   },

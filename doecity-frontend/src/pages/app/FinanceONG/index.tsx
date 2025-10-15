@@ -1,16 +1,20 @@
+import ListFinance from '@components/ListFinance';
 import { AppContext } from '@contexts/AppContext';
 import { AuthContext } from '@contexts/AuthContext';
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
-import { useContext } from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useContext, useState } from 'react';
+import { Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+const windowHeight = Dimensions.get('window').height;
 export default function FinanceONG() {
     const { theme } = useContext(AuthContext);
-    const { listUser } = useContext(AppContext);
+    const { listUser, finances, listFinance } = useContext(AppContext);
     const route = useRoute();
+    const [loading, setLoading] = useState(false);
     const { id, name } = route.params as { id: string; name: string };
-    function list() {
-
+    async function handleListFinance() {
+        await listFinance({ isONG: 'true', ong_id: id });
     }
     return (
         <SafeAreaView style={
@@ -21,7 +25,48 @@ export default function FinanceONG() {
                     { backgroundColor: '#fff' }]
         }>
 
-            <Text>oi</Text>
+            <TouchableOpacity style={style.newButton} onPress={() => null}>
+                <FontAwesome5
+                    name="donate"
+                    size={24}
+                    color="#fff" />
+                <Text style={{ color: '#fff' }}> Doar para essa ONG </Text>
+            </TouchableOpacity>
+            {Platform.OS === 'web' ? (
+                <ScrollView
+                    style={style.scrollWeb}
+                    contentContainerStyle={{ flexGrow: 1, marginBottom: 100 }}
+                    refreshControl={
+                        <RefreshControl refreshing={loading} onRefresh={handleListFinance} />
+                    }
+                >
+                    {finances.map((item) => (
+                        <ListFinance
+                            action={item.action}
+                            title={item.title}
+                            description={item.description}
+                            value={item.value}
+                        />
+                    ))}
+
+                </ScrollView>
+            ) : (
+                <FlatList
+                    data={finances}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <ListFinance
+                            action={item.action}
+                            title={item.title}
+                            description={item.description}
+                            value={item.value}
+                        />
+                    )}
+                    refreshControl={
+                        <RefreshControl refreshing={loading} onRefresh={handleListFinance} />
+                    }
+                />
+            )}
         </SafeAreaView >
     );
 }
@@ -41,5 +86,18 @@ const style = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    newButton: {
+        margin: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: '#f6b10a',
+        borderRadius: 10,
+        height: 40,
+        flexDirection: 'row'
+    },
+    scrollWeb: {
+        height: Platform.OS === 'web' ? windowHeight : undefined, // número
+        width: '100%',
+    },
 })

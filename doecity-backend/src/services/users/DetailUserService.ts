@@ -37,7 +37,8 @@ class DetailUserService {
                 description: true,
                 created_at: true,
                 update_at: true,
-                photo: true
+                photo: true,
+                balance: true,
             }
         })
 
