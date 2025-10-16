@@ -12,14 +12,12 @@ const windowHeight = Dimensions.get('window').height;
 
 export default function Donate() {
     const { theme, user } = useContext(AuthContext);
-    const route = useRoute();
-    const { saldReq, balance, donateONG } = useContext(AppContext);
+    const { saldReq, balance, donateONG, ongSelectedId, ongSelectedName } = useContext(AppContext);
     const navigation = useNavigation<any>();
     const [value, setValue] = useState("");
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const { id, name } = route.params as { id: string; name: string };
     useEffect(() => {
         async function loadBalance() {
             await saldReq({ user_id: user.id })
@@ -31,7 +29,7 @@ export default function Donate() {
         let numericString = value.replace("R$", "").trim().replace(/\./g, "").replace(",", ".");
         let num = Number(numericString);
         console.log(num);
-        await donateONG({ user_id: user.id, ong_id: id, title, description, value: num }).catch(() => {
+        await donateONG({ user_id: user.id, ong_id: ongSelectedId, title, description, value: num }).catch(() => {
             if(Platform.OS === 'web'){
                 window.alert("Saldo Invalido!!!");
             } else {

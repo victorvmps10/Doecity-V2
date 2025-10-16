@@ -9,7 +9,7 @@ import { Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, ScrollVie
 const windowHeight = Dimensions.get('window').height;
 export default function FinanceONG() {
     const { theme } = useContext(AuthContext);
-    const { listUser, finances, listFinance, balance, saldReq } = useContext(AppContext);
+    const { listUser, finances, listFinance, balance, saldReq, ongSelectedId, ongSelectedName } = useContext(AppContext);
     const route = useRoute();
     const [loading, setLoading] = useState(false);
     const params = route.params as { id?: string; name?: string } | undefined;
@@ -20,22 +20,18 @@ export default function FinanceONG() {
     useFocusEffect(
         useCallback(() => {
             async function loadFinance() {
-                if (id) {
-                    await listFinance({ isONG: 'true', ong_id: id });
+                    await listFinance({ isONG: 'true', ong_id: ongSelectedId });
 
-                    await saldReq({ user_id: id });
-                }
+                    await saldReq({ user_id: ongSelectedId });
 
             }
             loadFinance();
         }, [])
     );
-    async function handleListFinance() {
-        if (id) {
-            await listFinance({ isONG: 'true', ong_id: id });
+    async function handleListFinance() {  
+            await listFinance({ isONG: 'true', ong_id: ongSelectedId });
 
-            await saldReq({ user_id: id });
-        }
+            await saldReq({ user_id: ongSelectedId });
     }
     return (
         <SafeAreaView style={

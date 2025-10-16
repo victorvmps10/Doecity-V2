@@ -1,3 +1,4 @@
+import { AppContext } from '@contexts/AppContext';
 import { AuthContext } from '@contexts/AuthContext';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -18,6 +19,7 @@ interface ListRequest {
   postCreated?: Date;
 }
 export default function ListDiscover({ id, name, userPhoto, postId, postPhoto, postTitle, postDesc, postCreated }: ListRequest) {
+  const { setOngSelectedId, setOngSelectedName } = useContext(AppContext);
   const [visible, setVisible] = useState(false);
 
   function formatTimePost() {
@@ -30,6 +32,8 @@ export default function ListDiscover({ id, name, userPhoto, postId, postPhoto, p
     )
   }
   function handleNavigate() {
+    setOngSelectedId(id)
+    setOngSelectedName(name)
     navigation.navigate('StackDiscover', {
       screen: 'TopBarONG',
       params: {

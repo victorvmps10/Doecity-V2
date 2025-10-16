@@ -11,7 +11,7 @@ import ListPost from '@components/ListPost';
 
 export default function PostONG() {
     const { theme } = useContext(AuthContext);
-    const { listPost, postONG, loading, setPostONG } = useContext(AppContext);
+    const { listPost, postONG, loading, setPostONG, ongSelectedId } = useContext(AppContext);
     const navigation = useNavigation<any>();
 
     const route = useRoute();
@@ -19,17 +19,15 @@ export default function PostONG() {
     const id = params?.id;
     const name = params?.name;
     useEffect(() => {
+        console.log(ongSelectedId);
         const unsubscribe = navigation.addListener('beforeRemove', () => {
             setPostONG([]);
         });
 
         handleListPost();
     }, [navigation]);
-    async function handleListPost() {
-        if (id) {
-            await listPost({ id: id });
-        }
-
+    async function handleListPost() {  
+            await listPost({ id: ongSelectedId });
     }
     return (
         <SafeAreaView

@@ -1,3 +1,4 @@
+import { AppContext } from '@contexts/AppContext';
 import { AuthContext } from '@contexts/AuthContext';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -16,8 +17,11 @@ interface ListONGProps {
 }
 export default function ListONG({ id, username, name, photo }: ListONGProps) {
     const { theme } = useContext(AuthContext);
+    const { setOngSelectedId, setOngSelectedName } = useContext(AppContext);
     const navigation = useNavigation<any>();
     function handleNavigate() {
+        setOngSelectedId(id)
+        setOngSelectedName(name)
         navigation.navigate('StackDiscover', {
             screen: 'TopBarONG',
             params: {
@@ -61,7 +65,7 @@ export default function ListONG({ id, username, name, photo }: ListONGProps) {
 
 const style = StyleSheet.create({
     container: {
-        alignItems: 'center', 
+        alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 10,
         padding: 5,
@@ -69,7 +73,7 @@ const style = StyleSheet.create({
         backgroundColor: '#fff',
         borderWidth: 2,
         borderColor: '#2f1b36',
-        width:'90%'
+        width: '90%'
     },
     name: {
         fontWeight: 'bold',

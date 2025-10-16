@@ -10,7 +10,7 @@ import { ptBR } from 'date-fns/locale';
 export default function InfoONG() {
     const navigation = useNavigation<any>();
     const { theme } = useContext(AuthContext);
-    const { detailUser, info } = useContext(AppContext);
+    const { detailUser, info, ongSelectedId } = useContext(AppContext);
     const route = useRoute();
     const params = route.params as { id?: string; name?: string } | undefined;
     const id = params?.id;
@@ -20,12 +20,11 @@ export default function InfoONG() {
 
     useFocusEffect(
         useCallback(() => {
-            if (id) {
-                detailUser({ user_id: id }).then(() => {
+                detailUser({ user_id: ongSelectedId }).then(() => {
                     setCreated(format(new Date(info.created_at), "dd/MM/yyyy - HH:mm", { locale: ptBR }));
                     setUpdate(format(new Date(info.update_at), "dd/MM/yyyy - HH:mm", { locale: ptBR }));
                 })
-            }
+
         }, [])
     );
 

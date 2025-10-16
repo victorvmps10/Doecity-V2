@@ -29,6 +29,11 @@ type AppContextData = {
     info: any[];
     finances: any[];
     balance: number;
+    setOngSelectedId: Dispatch<SetStateAction<string>>;
+    setOngSelectedName: Dispatch<SetStateAction<string>>;
+    ongSelectedId: string;
+    ongSelectedName: string;
+
 }
 
 interface Post {
@@ -113,6 +118,8 @@ export default function AppProvider({ children }: AppProviderProps) {
     const [finances, setFinances] = useState([]);
     const [info, setInfo] = useState<any>([]);
     const [photo, setPhoto] = useState<File | string>("");
+    const [ongSelectedId, setOngSelectedId] = useState("");
+    const [ongSelectedName, setOngSelectedName] = useState("");
 
     async function createPost({ title, description }: CreatePostProps) {
         if (!title || !description) {
@@ -313,7 +320,8 @@ export default function AppProvider({ children }: AppProviderProps) {
     return (
         <AppContext.Provider value={{
             createPost, listPost, listUser, listDiscoverONGS, setPostPhoto, detailUser, depositFinance, sakeFinance,
-            data, loading, ongs, photo, discoverData, postONG, setPostONG, info, listFinance, finances, saldReq, balance, donateONG
+            data, loading, ongs, photo, discoverData, postONG, setPostONG, info, listFinance, finances, saldReq, balance, donateONG,
+            setOngSelectedId, setOngSelectedName, ongSelectedName, ongSelectedId
         }}>
             {children}
         </AppContext.Provider>

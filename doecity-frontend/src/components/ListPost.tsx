@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { api } from '../services/api';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { AppContext } from '@contexts/AppContext';
 
 interface ListPostProps {
     user_id: string;
@@ -19,6 +20,7 @@ interface ListPostProps {
     created_at: Date;
 }
 export default function ListPost({ user_id, username, title, description, created_at, photo_user, photo }: ListPostProps) {
+    const { setOngSelectedId, setOngSelectedName } = useContext(AppContext);
     const [visible, setVisible] = useState(false);
     function formatTimePost() {
         return formatDistance(
@@ -31,6 +33,8 @@ export default function ListPost({ user_id, username, title, description, create
     }
 
     function handleNavigate() {
+        setOngSelectedId(user_id)
+        setOngSelectedName(username)
         navigation.navigate('StackDiscover', {
             screen: 'TopBarONG',
             params: {
