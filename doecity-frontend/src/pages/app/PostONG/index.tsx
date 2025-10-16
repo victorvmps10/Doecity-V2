@@ -15,7 +15,9 @@ export default function PostONG() {
     const navigation = useNavigation<any>();
 
     const route = useRoute();
-    const { id, name } = route.params as { id: string; name: string };
+    const params = route.params as { id?: string; name?: string } | undefined;
+    const id = params?.id;
+    const name = params?.name;
     useEffect(() => {
         const unsubscribe = navigation.addListener('beforeRemove', () => {
             setPostONG([]);
@@ -24,7 +26,10 @@ export default function PostONG() {
         handleListPost();
     }, [navigation]);
     async function handleListPost() {
-        await listPost({ id: id });
+        if (id) {
+            await listPost({ id: id });
+        }
+
     }
     return (
         <SafeAreaView

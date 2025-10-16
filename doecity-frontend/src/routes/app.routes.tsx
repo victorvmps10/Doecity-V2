@@ -196,7 +196,8 @@ function TopBarONG() {
     const navigation = useNavigation<any>();
     const { theme } = useContext(AuthContext);
     const route = useRoute();
-    const { id, name } = route.params as { id: string; name: string };
+    const { id, name } = (route.params as { id?: string; name?: string }) || {};
+    if (!id || !name) return null;
     return (
         <SafeAreaView
             style={[
@@ -233,7 +234,6 @@ function TopBarONG() {
                     options={{
                         tabBarLabel: 'Posts'
                     }}
-                    initialParams={{ id: id, name: name }}
                 />
                 <TopBar.Screen
                     name='FinanceONG'
@@ -241,7 +241,6 @@ function TopBarONG() {
                     options={{
                         tabBarLabel: 'Finanças'
                     }}
-                    initialParams={{ id: id, name: name }}
                 />
                 <TopBar.Screen
                     name='InfoONG'
@@ -249,7 +248,6 @@ function TopBarONG() {
                     options={{
                         tabBarLabel: 'Sobre'
                     }}
-                    initialParams={{ id: id, name: name }}
                 />
             </TopBar.Navigator>
         </SafeAreaView >
@@ -260,7 +258,7 @@ function TopBarONG() {
 function FinanceONGStack() {
     const Stack = createStackNavigator();
     const route = useRoute();
-    const { id, name } = route.params as { id: string; name: string };
+    const { id, name } = (route.params as { id?: string; name?: string }) || {};
     return (
         <Stack.Navigator
             screenOptions={{
@@ -270,12 +268,11 @@ function FinanceONGStack() {
             <Stack.Screen
                 name="FinanceONG1"
                 component={FinanceONG}
-                initialParams={{ id: id, name: name }}
+
             />
             <Stack.Screen
                 name="Donate"
                 component={Donate}
-                initialParams={{ id: id, name: name }}
             />
         </Stack.Navigator>
     )

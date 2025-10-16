@@ -12,21 +12,30 @@ export default function FinanceONG() {
     const { listUser, finances, listFinance, balance, saldReq } = useContext(AppContext);
     const route = useRoute();
     const [loading, setLoading] = useState(false);
-    const { id, name } = route.params as { id: string; name: string };
+    const params = route.params as { id?: string; name?: string } | undefined;
+    const id = params?.id;
+    const name = params?.name;
     const navigation = useNavigation<any>();
 
     useFocusEffect(
         useCallback(() => {
             async function loadFinance() {
-                await listFinance({ isONG: 'true', ong_id: id });
-                await saldReq({ user_id: id });
+                if (id) {
+                    await listFinance({ isONG: 'true', ong_id: id });
+
+                    await saldReq({ user_id: id });
+                }
+
             }
             loadFinance();
         }, [])
     );
     async function handleListFinance() {
-        await listFinance({ isONG: 'true', ong_id: id });
-        await saldReq({ user_id: id });
+        if (id) {
+            await listFinance({ isONG: 'true', ong_id: id });
+
+            await saldReq({ user_id: id });
+        }
     }
     return (
         <SafeAreaView style={

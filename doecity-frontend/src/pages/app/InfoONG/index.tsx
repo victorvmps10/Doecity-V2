@@ -12,17 +12,20 @@ export default function InfoONG() {
     const { theme } = useContext(AuthContext);
     const { detailUser, info } = useContext(AppContext);
     const route = useRoute();
-    const { id } = route.params as { id: string; };
+    const params = route.params as { id?: string; name?: string } | undefined;
+    const id = params?.id;
+    const name = params?.name;
     const [created, setCreated] = useState(``);
     const [update, setUpdate] = useState(``);
 
     useFocusEffect(
         useCallback(() => {
-            detailUser({ user_id: id }).then(() => {
-                setCreated(format(new Date(info.created_at), "dd/MM/yyyy - HH:mm", { locale: ptBR }));
-                setUpdate(format(new Date(info.update_at), "dd/MM/yyyy - HH:mm", { locale: ptBR }));
-            })
-
+            if (id) {
+                detailUser({ user_id: id }).then(() => {
+                    setCreated(format(new Date(info.created_at), "dd/MM/yyyy - HH:mm", { locale: ptBR }));
+                    setUpdate(format(new Date(info.update_at), "dd/MM/yyyy - HH:mm", { locale: ptBR }));
+                })
+            }
         }, [])
     );
 

@@ -4,6 +4,9 @@ class DiscoverUserService {
     async execute() {
 
         const user = await prismaClient.users.findMany({
+            where:{
+                isONG: true
+            },
             select: {
                 id: true,
                 name: true,
