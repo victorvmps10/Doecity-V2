@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 import { AuthContext } from '@contexts/AuthContext';
@@ -8,6 +8,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { AppContext } from '@contexts/AppContext';
 import ListPost from '@components/ListPost';
 
+const windowHeight = Dimensions.get('window').height;
 
 export default function PostONG() {
     const { theme } = useContext(AuthContext);
@@ -26,8 +27,8 @@ export default function PostONG() {
 
         handleListPost();
     }, [navigation]);
-    async function handleListPost() {  
-            await listPost({ id: ongSelectedId });
+    async function handleListPost() {
+        await listPost({ id: ongSelectedId });
     }
     return (
         <SafeAreaView
@@ -36,28 +37,47 @@ export default function PostONG() {
                 theme ? { backgroundColor: '#2f1b36' }
                     :
                     { backgroundColor: '#fff' }]}>
-            <FlatList
-                data={postONG}
-                keyExtractor={(item) => item.id}
+            {Platform.OS === 'web' ? (
+                <ScrollView
+                    style={style.scrollWeb}
+                    contentContainerStyle={{ flexGrow: 1, marginBottom: 100 }}
+                    refreshControl={
+                        <RefreshControl refreshing={loading} onRefresh={handleListPost} />
+                    }
+                >
+                    {postONG.map((item) => (
+                        <ListPost
+                            user_id={item.user_id}
+                            username={item.userName}
+                            title={item.title}
+                            description={item.description}
+                            created_at={item.created_at}
+                            photo={item.photo}
+                            photo_user={item.photo_user}
+                        />
+                    ))}
 
-                renderItem={({ item }) =>
-                    <ListPost
-                        user_id={item.user_id}
-                        username={item.userName}
-                        title={item.title}
-                        description={item.description}
-                        created_at={item.created_at}
-                        photo={item.photo}
-                        photo_user={item.photo_user}
-                    />
-                }
-                refreshControl={
-                    <RefreshControl refreshing={loading} onRefresh={handleListPost} />
-                }
-                ListEmptyComponent={() => (
-                    <Text>Nenhum post encontrado.</Text>
-                )}
-            />
+                </ScrollView>
+            ) : (
+                <FlatList
+                    data={postONG}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <ListPost
+                            user_id={item.user_id}
+                            username={item.userName}
+                            title={item.title}
+                            description={item.description}
+                            created_at={item.created_at}
+                            photo={item.photo}
+                            photo_user={item.photo_user}
+                        />
+                    )}
+                    refreshControl={
+                        <RefreshControl refreshing={loading} onRefresh={handleListPost} />
+                    }
+                />
+            )}
 
 
 
@@ -79,5 +99,9 @@ const style = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    scrollWeb: {
+        height: Platform.OS === 'web' ? windowHeight : undefined, // número
+        width: '100%',
+    },
 })
