@@ -25,6 +25,7 @@ import FinanceONG from "@pages/app/FinanceONG";
 import Info from "@pages/app/Info";
 import { AntDesign } from "@expo/vector-icons";
 import Finance from "@pages/app/Finance";
+import Donate from "@pages/app/Donate";
 
 
 export default function AppRoutes() {
@@ -157,7 +158,7 @@ function StackAccount() {
                 name="EditUser"
                 component={EditUser}
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="Finance"
                 component={Finance}
             />
@@ -236,7 +237,7 @@ function TopBarONG() {
                 />
                 <TopBar.Screen
                     name='FinanceONG'
-                    component={FinanceONG}
+                    component={FinanceONGStack}
                     options={{
                         tabBarLabel: 'Finanças'
                     }}
@@ -253,6 +254,30 @@ function TopBarONG() {
             </TopBar.Navigator>
         </SafeAreaView >
 
+    )
+}
+
+function FinanceONGStack() {
+    const Stack = createStackNavigator();
+    const route = useRoute();
+    const { id, name } = route.params as { id: string; name: string };
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: false
+            }}
+        >
+            <Stack.Screen
+                name="FinanceONG1"
+                component={FinanceONG}
+                initialParams={{ id: id, name: name }}
+            />
+            <Stack.Screen
+                name="Donate"
+                component={Donate}
+                initialParams={{ id: id, name: name }}
+            />
+        </Stack.Navigator>
     )
 }
 

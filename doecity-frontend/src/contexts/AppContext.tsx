@@ -15,6 +15,8 @@ type AppContextData = {
     depositFinance: (Credentials: DepositProps) => Promise<void>;
     sakeFinance: (Credentials: DepositProps) => Promise<void>;
     listFinance: (Credentials: ListFinanceProps) => Promise<void>;
+    saldReq: (Credentials: BalanceProps) => Promise<void>;
+    donateONG: (Credentials: donateONGProps) => Promise<void>;
     setPostPhoto: () => Promise<void>;
     listDiscoverONGS: () => Promise<void>;
     photo: File | string;
@@ -26,6 +28,7 @@ type AppContextData = {
     discoverData: any[];
     info: any[];
     finances: any[];
+    balance: number;
 }
 
 interface Post {
@@ -82,6 +85,18 @@ type ListFinanceProps = {
     isONG: string;
 }
 
+type BalanceProps = {
+    user_id: string;
+}
+
+type donateONGProps = {
+    value: number;
+    title?: string;
+    description?: string;
+    user_id: string;
+    ong_id: string;
+}
+
 export const AppContext = createContext({} as AppContextData);
 
 export default function AppProvider({ children }: AppProviderProps) {
@@ -90,6 +105,7 @@ export default function AppProvider({ children }: AppProviderProps) {
     const { user } = useContext(AuthContext);
 
     const [loading, setLoading] = useState(false);
+    const [balance, setBalance] = useState(0);
     const [data, setData] = useState([]);
     const [postONG, setPostONG] = useState<Post[]>([]);
     const [discoverData, setDiscoverData] = useState<any[]>([]);
@@ -277,10 +293,27 @@ export default function AppProvider({ children }: AppProviderProps) {
         console.log(response.data);
 
     }
+    async function saldReq({ user_id }: BalanceProps) {
+        const response = await api.get('/finances/balance',
+            {
+                params: { user_id }
+            }
+        );
+        setBalance(response.data.balance);
+        console.log(response.data);
+    }
+    async function donateONG({ value, title, description, user_id, ong_id }: donateONGProps) {
+        const response = await api.post('/finances/donate',
+            {
+                value, title, description, user_id, ong_id
+            }
+        );
+        console.log(response.data);
+    }
     return (
         <AppContext.Provider value={{
             createPost, listPost, listUser, listDiscoverONGS, setPostPhoto, detailUser, depositFinance, sakeFinance,
-            data, loading, ongs, photo, discoverData, postONG, setPostONG, info, listFinance, finances
+            data, loading, ongs, photo, discoverData, postONG, setPostONG, info, listFinance, finances, saldReq, balance, donateONG
         }}>
             {children}
         </AppContext.Provider>

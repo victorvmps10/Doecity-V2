@@ -55,7 +55,7 @@ export default function Info() {
               Iuri Chagas
             </Text>
             <Text style={style.func}>
-              Designer
+              DBA
             </Text>
           </View>
         </ScrollView>
@@ -102,7 +102,7 @@ export default function Info() {
                 Iuri Chagas
               </Text>
               <Text style={style.func}>
-                Designer
+                DBA
               </Text>
             </View>
           </View>

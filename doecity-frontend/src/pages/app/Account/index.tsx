@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { Alert, Image, Linking, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import { AuthContext } from '@contexts/AuthContext';
 import Header from '@components/Header';

@@ -39,6 +39,7 @@ import { ListActionController } from "./controllers/finances/ListActionControlle
 import { DonateController } from "./controllers/finances/DonateController";
 import { DepositController } from "./controllers/finances/DepositController";
 import { SakeController } from "./controllers/finances/SakeController";
+import { SaldController } from "./controllers/finances/SaldController";
 
 
 
@@ -69,6 +70,7 @@ router.get('/finances/list', isAutenticated, new ListActionController().handle);
 router.post('/finances/donate', isAutenticated, new DonateController().handle);
 router.put('/finances/deposit', isAutenticated, new DepositController().handle);
 router.put('/finances/sake', isAutenticated, new SakeController().handle);
+router.get('/finances/balance', isAutenticated, new SaldController().handle);
 
 // -- ROTAS DE POSTS
 

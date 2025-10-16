@@ -97,7 +97,7 @@ export default function ListPost({ user_id, username, title, description, create
                     <Image
                         source={{ uri: `${api.defaults.baseURL}/upload/${photo}` }}
                         style={style.imgFull}
-                        resizeMode="stretch"
+                        resizeMode="contain"
                     />
                 </View>
 

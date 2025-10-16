@@ -12,10 +12,9 @@ const windowHeight = Dimensions.get('window').height;
 
 export default function Finance() {
     const { theme, user } = useContext(AuthContext);
-    const { depositFinance, sakeFinance, listFinance, finances } = useContext(AppContext);
+    const { depositFinance, sakeFinance, listFinance, finances, saldReq, balance } = useContext(AppContext);
     const navigation = useNavigation<any>();
     const [value, setValue] = useState("");
-    const [balance, setBalance] = useState("");
     const [loading, setLoading] = useState(false);
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);
@@ -23,8 +22,10 @@ export default function Finance() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     useEffect(() => {
-
-
+        async function loadBalance() {
+            await saldReq({ user_id: user.id })
+        }
+        loadBalance();
     }, [])
     async function handleDeposit() {
         setLoading1(true);
@@ -145,13 +146,16 @@ export default function Finance() {
                             }
                         >
                             {finances.map((item) => (
-                                <ListFinance
-                                    key={item.id}
-                                    action={item.action}
-                                    title={item.title}
-                                    description={item.description}
-                                    value={item.value}
-                                />
+                                <View style={{ alignItems: 'center' }}>
+                                    <ListFinance
+                                        key={item.id}
+                                        action={item.action}
+                                        title={item.title}
+                                        description={item.description}
+                                        value={item.value}
+                                    />
+                                </View>
+
                             ))}
 
                         </ScrollView>
@@ -159,6 +163,10 @@ export default function Finance() {
                         <FlatList
                             data={finances}
                             keyExtractor={(item) => item.id}
+                            contentContainerStyle={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
                             renderItem={({ item }) => (
                                 <ListFinance
                                     action={item.action}

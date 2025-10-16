@@ -96,7 +96,7 @@ export default function ListDiscover({ id, name, userPhoto, postId, postPhoto, p
           <Image
             source={{ uri: `${api.defaults.baseURL}/upload/${postPhoto}` }}
             style={style.imgFull}
-            resizeMode="stretch"
+            resizeMode="contain"
           />
         </View>
 

@@ -19,8 +19,8 @@ export default function ListFinance({ action, title, description, value }: ListF
     const navigation = useNavigation<any>();
     return (
         <View style={style.container}>
-
-            <Text style={style.action}>{action ? 'Saque' : 'Deposito'} - {value}</Text>
+            
+            <Text style={style.action}>{action ? 'Saque' : 'Deposito'} - R$ {value}</Text>
             <Text style={style.title}>{title}</Text>
             <Text style={style.text}>{description}</Text>
         </View>

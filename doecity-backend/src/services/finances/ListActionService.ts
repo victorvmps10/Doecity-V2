@@ -15,6 +15,9 @@ class ListActionService {
                         { ong_id: ong_id },
                         { user_id: ong_id }
                     ]
+                },
+                orderBy: {
+                    created_at: 'desc'
                 }
             })
             return list;
@@ -25,6 +28,9 @@ class ListActionService {
                         { ong_id: user_id },
                         { user_id: user_id }
                     ]
+                },
+                orderBy: {
+                    created_at: 'desc'
                 }
             })
             return list;

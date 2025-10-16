@@ -2,19 +2,31 @@ import ListFinance from '@components/ListFinance';
 import { AppContext } from '@contexts/AppContext';
 import { AuthContext } from '@contexts/AuthContext';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import { useRoute } from '@react-navigation/native';
-import { useContext, useState } from 'react';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { useCallback, useContext, useState } from 'react';
 import { Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const windowHeight = Dimensions.get('window').height;
 export default function FinanceONG() {
     const { theme } = useContext(AuthContext);
-    const { listUser, finances, listFinance } = useContext(AppContext);
+    const { listUser, finances, listFinance, balance, saldReq } = useContext(AppContext);
     const route = useRoute();
     const [loading, setLoading] = useState(false);
     const { id, name } = route.params as { id: string; name: string };
+    const navigation = useNavigation<any>();
+
+    useFocusEffect(
+        useCallback(() => {
+            async function loadFinance() {
+                await listFinance({ isONG: 'true', ong_id: id });
+                await saldReq({ user_id: id });
+            }
+            loadFinance();
+        }, [])
+    );
     async function handleListFinance() {
         await listFinance({ isONG: 'true', ong_id: id });
+        await saldReq({ user_id: id });
     }
     return (
         <SafeAreaView style={
@@ -25,13 +37,14 @@ export default function FinanceONG() {
                     { backgroundColor: '#fff' }]
         }>
 
-            <TouchableOpacity style={style.newButton} onPress={() => null}>
+            <TouchableOpacity style={style.newButton} onPress={() => navigation.navigate("Donate")}>
                 <FontAwesome5
                     name="donate"
                     size={24}
                     color="#fff" />
                 <Text style={{ color: '#fff' }}> Doar para essa ONG </Text>
             </TouchableOpacity>
+            <Text style={style.balance}>Saldo ONG: R$ {balance}</Text>
             {Platform.OS === 'web' ? (
                 <ScrollView
                     style={style.scrollWeb}
@@ -41,18 +54,28 @@ export default function FinanceONG() {
                     }
                 >
                     {finances.map((item) => (
-                        <ListFinance
-                            action={item.action}
-                            title={item.title}
-                            description={item.description}
-                            value={item.value}
-                        />
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                            <ListFinance
+                                action={item.action}
+                                title={item.title}
+                                description={item.description}
+                                value={item.value}
+                            />
+                        </View>
+
                     ))}
 
                 </ScrollView>
             ) : (
                 <FlatList
                     data={finances}
+                    contentContainerStyle={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <ListFinance
@@ -100,4 +123,9 @@ const style = StyleSheet.create({
         height: Platform.OS === 'web' ? windowHeight : undefined, // número
         width: '100%',
     },
+    balance: {
+        fontSize: 30,
+        color: '#f6b10a',
+        textAlign: 'center'
+    }
 })

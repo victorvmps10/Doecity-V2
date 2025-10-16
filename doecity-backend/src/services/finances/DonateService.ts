@@ -11,16 +11,7 @@ interface DonateRequest {
 class DonateService {
     async execute({ value, title, description, user_id, ong_id }: DonateRequest) {
         const action = false; //False -> Receber
-        const deposit = await prismaClient.finances.create({
-            data: {
-                action,
-                title,
-                value,
-                description,
-                user_id,
-                ong_id
-            }
-        })
+
         const user = await prismaClient.users.findFirst({
             where: {
                 id: user_id
@@ -37,6 +28,19 @@ class DonateService {
                 balance: true
             }
         })
+        if (user.balance < value || value == 0) {
+            throw new Error("Saldo Invalido!!!");
+        }
+        const deposit = await prismaClient.finances.create({
+            data: {
+                action,
+                title,
+                value,
+                description,
+                user_id,
+                ong_id
+            }
+        })
         const update = await prismaClient.users.update({
             where: {
                 id: user_id
@@ -47,10 +51,10 @@ class DonateService {
         })
         const updateONG = await prismaClient.users.update({
             where: {
-                id: user_id
+                id: ong_id
             },
             data: {
-                balance: user.balance + value
+                balance: ong.balance + value
             }
         });
         return deposit;
