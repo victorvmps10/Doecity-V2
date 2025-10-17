@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Linking, Platform, SafeAreaView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
+//import 'react-native-pager-view';
+
 
 import Home from "@pages/app/Home";
 import NewPost from "@pages/app/NewPost";

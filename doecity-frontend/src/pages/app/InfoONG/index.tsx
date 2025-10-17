@@ -11,10 +11,6 @@ export default function InfoONG() {
     const navigation = useNavigation<any>();
     const { theme } = useContext(AuthContext);
     const { detailUser, info, ongSelectedId } = useContext(AppContext);
-    const route = useRoute();
-    const params = route.params as { id?: string; name?: string } | undefined;
-    const id = params?.id;
-    const name = params?.name;
     const [created, setCreated] = useState(``);
     const [update, setUpdate] = useState(``);
 

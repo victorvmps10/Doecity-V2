@@ -3,7 +3,7 @@ import { Dimensions, FlatList, Platform, RefreshControl, SafeAreaView, ScrollVie
 import { launchImageLibrary } from 'react-native-image-picker';
 
 import { AuthContext } from '@contexts/AuthContext';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { AppContext } from '@contexts/AppContext';
 import ListPost from '@components/ListPost';
@@ -15,10 +15,6 @@ export default function PostONG() {
     const { listPost, postONG, loading, setPostONG, ongSelectedId } = useContext(AppContext);
     const navigation = useNavigation<any>();
 
-    const route = useRoute();
-    const params = route.params as { id?: string; name?: string } | undefined;
-    const id = params?.id;
-    const name = params?.name;
     useEffect(() => {
         console.log(ongSelectedId);
         const unsubscribe = navigation.addListener('beforeRemove', () => {

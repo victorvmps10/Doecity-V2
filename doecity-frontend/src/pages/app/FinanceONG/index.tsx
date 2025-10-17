@@ -12,9 +12,6 @@ export default function FinanceONG() {
     const { listUser, finances, listFinance, balance, saldReq, ongSelectedId, ongSelectedName } = useContext(AppContext);
     const route = useRoute();
     const [loading, setLoading] = useState(false);
-    const params = route.params as { id?: string; name?: string } | undefined;
-    const id = params?.id;
-    const name = params?.name;
     const navigation = useNavigation<any>();
 
     useFocusEffect(
